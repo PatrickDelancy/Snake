@@ -7,14 +7,10 @@ import settings
 
 # current direction of the snake
 direction = 0
+
+# use indexes to keep track of the segment array element at head and tail of snake
 current_head = 0
 current_tail = 0
-
-def found_food(x, y):
-  #TODO - find out if we are colliding with some food on the screen somehow
-  if(random.randint(1,10) == 5):
-    return True
-  return False
 
 def calc_new_position(x, y):
   if (direction) == 0:
@@ -35,6 +31,8 @@ def move_snake():
     print("Nothing in target space, moving snake...")
   elif (item_in_target_position[0] == "normal_food"):
     print("Found food, growing snake...")
+    new_food_x, new_food_y = board.getRandomOpenPosition()
+    item_in_target_position[1].goto(new_food_x, new_food_y)
     new_segment = turtle.Turtle(shape="circle", visible=False)
     new_segment.color("green")
     new_segment.penup()
@@ -102,13 +100,17 @@ def setheading(new_direction):
 
 # event handlers for changing direction
 def go_up():
-  setheading(90)
+  if (direction != 270):
+    setheading(90)
 def go_down():
-  setheading(270)
+  if (direction != 90):
+    setheading(270)
 def go_left():
-  setheading(180)
+  if (direction != 0):
+    setheading(180)
 def go_right():
-  setheading(0)
+  if (direction != 180):
+    setheading(0)
 
 start_game()
 
