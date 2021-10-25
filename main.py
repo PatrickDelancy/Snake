@@ -1,28 +1,39 @@
 #imports
 import turtle
-import random
-
 import board
 import settings
 
 # current direction of the snake
-direction = 0
+heading = 0
 
 # use indexes to keep track of the segment array element at head and tail of snake
 current_head = 0
 current_tail = 0
 
+#running flag
+running = True
+
+#Turtle for information on the screen
+marquee = turtle.Turtle()
+marquee.color("Blue")
+marquee.hideturtle()
+marquee.penup()
+marquee.goto(-150,0)
+
 def calc_new_position(x, y):
-  if (direction) == 0:
+  if (heading) == 0:
     return x+settings.segment_size, y
-  if (direction) == 90:
+  if (heading) == 90:
     return x, y+settings.segment_size
-  if (direction) == 180:
+  if (heading) == 180:
     return x-settings.segment_size, y
   return x, y-settings.segment_size
 
 def move_snake():
   global current_tail, current_head
+  if (running == False):
+    return
+
   new_x, new_y = calc_new_position(board.snake_segments[current_head].xcor(), board.snake_segments[current_head].ycor())
 
   item_in_target_position = board.getItemAtPosition(new_x, new_y)
@@ -65,9 +76,8 @@ def move_snake():
 # game initialization
 def start_game():
   board.init()
-
   for i in range(3):
-    food = turtle.Turtle();
+    food = turtle.Turtle()
     food.shape("turtle")
     food.color("blue")
     food.penup()
@@ -94,27 +104,42 @@ def start_game():
   turtle.Screen().ontimer(move_snake, settings.move_interval)
 
 # function to set the global direction variable
-def setheading(new_direction):
-  global direction
-  direction = new_direction
+def setheading(new_heading):
+  global heading
+  heading = new_heading
 
 # event handlers for changing direction
 def go_up():
-  if (direction != 270):
+  global running
+  if (heading != 270):
     setheading(90)
 def go_down():
-  if (direction != 90):
+  global running
+  if (heading != 90):
     setheading(270)
 def go_left():
-  if (direction != 0):
+  global running
+  if (heading != 0):
     setheading(180)
 def go_right():
-  if (direction != 180):
+  global running
+  if (heading != 180 ):
     setheading(0)
+def pause():
+  global running
+  if (running):
+    running = False
+    marquee.write("Paused", font=("Arial", 74, "bold"))
+  else:
+    marquee.clear() # remove the "Paused" text
+    running = True
+    # need to restart the timer
+    turtle.Screen().ontimer(move_snake, settings.move_interval)
 
 start_game()
 
 wn = turtle.Screen()
+wn.onkeypress(pause, 'space')
 wn.onkeypress(go_up, 'Up')
 wn.onkeypress(go_down, 'Down')
 wn.onkeypress(go_left, 'Left')
