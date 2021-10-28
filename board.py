@@ -4,6 +4,7 @@ from typing import List, Tuple
 import settings
 
 gameBoard: turtle.Turtle = None
+gameMessage: turtle.Turtle = None
 
 barriers: List[turtle.Turtle] = []
 snake_segments: List[turtle.Turtle] = []
@@ -49,11 +50,9 @@ def createBarrierTurtle():
 def drawGameBoard():
     global gameBoard
 
-    screen = turtle.Screen()
-    screen.tracer(False)
-
     if (gameBoard == None):
         gameBoard = turtle.Turtle()
+        gameBoard.hideturtle()
     else:
         gameBoard.reset()
     
@@ -68,24 +67,54 @@ def drawGameBoard():
     gameBoard.goto(settings.maxx, settings.maxy)
     gameBoard.goto(settings.maxx, settings.miny)
     gameBoard.goto(settings.minx, settings.miny)
-    screen.tracer(True)
 
     for i in range(0, 3 + (2 * settings.difficulty)):
         addBarrier()
 
 def addBarrier():
-    screen = turtle.Screen()
-    screen.tracer(False)
     pos = getRandomOpenPosition()
 
     barrier = createBarrierTurtle()
     barrier.goto(pos[0], pos[1])
 
-    screen.tracer(True)
     barriers.append(barrier)
+
+def clear():
+    global snake_segments, barriers, gameBoard, gameMessage, food
+    snake_segments = []
+    barriers = []
+    food = []
+
+    gameBoard = None
+    gameMessage = None
+
+    turtle.clearscreen()
+
+def gameOver(reason: str = None):
+    clear()
+    if (reason == 'snake'):
+        writeMessage("Snake doesn't taste very good.")
+    elif (reason == 'barrier'):
+        writeMessage("You hit a wall. Time to re-think your life choices.")
+    else:
+        writeMessage("Game Over")
+
+def writeMessage(message: str):
+    global gameMessage
+    if (gameMessage == None):
+        gameMessage = turtle.Turtle()
+        gameMessage.hideturtle()
+        gameMessage.penup()
+        gameMessage.write(arg=message, align="center", font=("Comic Sans", 30, "normal"))
+
+def clearMessage():
+    global gameMessage
+    if (gameMessage != None):
+        gameMessage.clear()
 
 def setDifficulty(difficulty: int = 1):
     settings.difficulty = difficulty
 
 def init():
     drawGameBoard()
+    clearMessage()

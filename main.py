@@ -14,11 +14,7 @@ current_tail = 0
 running = True
 
 #Turtle for information on the screen
-marquee = turtle.Turtle()
-marquee.color("Blue")
-marquee.hideturtle()
-marquee.penup()
-marquee.goto(-150,0)
+marquee: turtle.Turtle() = None
 
 def calc_new_position(x, y):
   if (heading) == 0:
@@ -30,7 +26,7 @@ def calc_new_position(x, y):
   return x, y-settings.segment_size
 
 def move_snake():
-  global current_tail, current_head
+  global current_tail, current_head, running
   if (running == False):
     return
 
@@ -42,6 +38,8 @@ def move_snake():
     print("Nothing in target space, moving snake...")
   elif (item_in_target_position[0] == "normal_food"):
     print("Found food, growing snake...")
+    wn.tracer(False)
+
     new_food_x, new_food_y = board.getRandomOpenPosition()
     item_in_target_position[1].goto(new_food_x, new_food_y)
     new_segment = turtle.Turtle(shape="circle", visible=False)
@@ -51,11 +49,16 @@ def move_snake():
     new_segment.goto(board.snake_segments[current_tail].xcor(), board.snake_segments[current_tail].ycor())
     new_segment.showturtle()
     board.snake_segments.insert(current_tail, new_segment)
+
+    wn.tracer(True)
     current_tail += 1
   elif (item_in_target_position[0] == "bad_food"):
     board.addBarrier()
   else: # anything else is a barrier or wall
     print("Hit a barrier or wall... game over!")
+    board.gameOver(item_in_target_position[0])
+    wn.onkeypress(start_game, 'Return')
+    return
 
   # move the tail to the head
   board.snake_segments[current_tail].hideturtle()
@@ -72,9 +75,26 @@ def move_snake():
   # reset the timer event to fire  
   turtle.Screen().ontimer(move_snake, settings.move_interval)
 
-
 # game initialization
 def start_game():
+  global heading, current_head, current_tail, running
+  wn.onkeypress(None, 'Return')
+
+  board.clear()
+
+  wn.onkeypress(pause, 'space')
+  wn.onkeypress(go_up, 'Up')
+  wn.onkeypress(go_down, 'Down')
+  wn.onkeypress(go_left, 'Left')
+  wn.onkeypress(go_right, 'Right')
+
+  wn.tracer(False)
+
+  heading = 0
+  current_head = 0
+  current_tail = 0
+  running = True
+
   board.init()
   for i in range(3):
     food = turtle.Turtle()
@@ -94,13 +114,12 @@ def start_game():
     food.goto(pos[0], pos[1])
     board.food.append(("bad_food", food))
 
-
   new_segment = turtle.Turtle(shape="circle")
   new_segment.color("green")
   new_segment.goto(0, 0)
   new_segment.penup()
   board.snake_segments.append(new_segment)
-
+  wn.tracer(True)
   turtle.Screen().ontimer(move_snake, settings.move_interval)
 
 # function to set the global direction variable
@@ -126,7 +145,14 @@ def go_right():
   if (heading != 180 ):
     setheading(0)
 def pause():
-  global running
+  global running, marquee
+  if (marquee == None):
+    marquee = turtle.Turtle()
+    marquee.color("Blue")
+    marquee.hideturtle()
+    marquee.penup()
+    marquee.goto(-150,0)
+
   if (running):
     running = False
     marquee.write("Paused", font=("Arial", 74, "bold"))
@@ -136,14 +162,10 @@ def pause():
     # need to restart the timer
     turtle.Screen().ontimer(move_snake, settings.move_interval)
 
-start_game()
-
 wn = turtle.Screen()
-wn.onkeypress(pause, 'space')
-wn.onkeypress(go_up, 'Up')
-wn.onkeypress(go_down, 'Down')
-wn.onkeypress(go_left, 'Left')
-wn.onkeypress(go_right, 'Right')
+wn.onkeypress(start_game, 'Return')
 wn.listen()
+
+board.writeMessage('Press "Enter" to start a new game.')
 
 wn.mainloop()
