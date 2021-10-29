@@ -94,6 +94,7 @@ def start_game(difficulty_selected):
   wn.onkeypress(go_down, 'Down')
   wn.onkeypress(go_left, 'Left')
   wn.onkeypress(go_right, 'Right')
+  wn.onkeypress(exit, 'q')
 
   wn.tracer(False)
 
@@ -185,6 +186,7 @@ def difficulty_keys_on():
   wn.onkeypress(difficulty_3, '3')
   wn.onkeypress(difficulty_4, '4')
   wn.onkeypress(difficulty_5, '5')
+  wn.onkeypress(exit, 'q')
 
 def difficulty_keys_off():
   wn.onkeypress(None, '1')
@@ -193,7 +195,7 @@ def difficulty_keys_off():
   wn.onkeypress(None, '4')
   wn.onkeypress(None, '5')
 
-board.writeMessage('Press a number 1-5 to select difficulty\nlevel and start the game.')
+board.writeMessage('Press a number 1-5 to select difficulty\nlevel and start the game.\nPress "q" to quit.')
 
 wn = turtle.Screen()
 difficulty_keys_on()
