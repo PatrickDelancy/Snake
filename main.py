@@ -166,7 +166,7 @@ def pause():
     marquee.clear() # remove the "Paused" text
     running = True
     # need to restart the timer
-    turtle.Screen().ontimer(move_snake, settings.move_interval[difficulty])
+    turtle.Screen().ontimer(move_snake, settings.move_interval[difficulty-1])
 
 def difficulty_1():
   start_game(1)
@@ -193,7 +193,7 @@ def difficulty_keys_off():
   wn.onkeypress(None, '4')
   wn.onkeypress(None, '5')
 
-board.writeMessage('Press a number 1-5 to select difficulty level and start the game.')
+board.writeMessage('Press a number 1-5 to select difficulty\nlevel and start the game.')
 
 wn = turtle.Screen()
 difficulty_keys_on()
