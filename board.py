@@ -93,9 +93,9 @@ def clear():
 def gameOver(reason: str = None, score: int = 0):
     clear()
     if (reason == 'snake'):
-        writeMessage("Snake doesn't taste very good. Your score = " + str(score))
+        writeMessage("Snake doesn't taste very good.\nYour score = " + str(score))
     elif (reason == 'barrier'):
-        writeMessage("You hit a wall. Time to re-think your life choices. Your score = " + str(score))
+        writeMessage("You hit a wall. Time to re-think your\nlife choices. Your score = " + str(score))
     else:
         writeMessage("Game Over. Your score = " + str(score))
 
