@@ -1,7 +1,7 @@
 
 difficulty = 2
 
-move_interval = 500
+move_interval = [600, 500, 400, 300, 200] 
 segment_size = 20 # turtlesize 1 = pensize 20
 
 minx = segment_size * -10

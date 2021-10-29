@@ -90,14 +90,14 @@ def clear():
 
     turtle.clearscreen()
 
-def gameOver(reason: str = None):
+def gameOver(reason: str = None, score: int = 0):
     clear()
     if (reason == 'snake'):
-        writeMessage("Snake doesn't taste very good.")
+        writeMessage("Snake doesn't taste very good. Your score = " + str(score))
     elif (reason == 'barrier'):
-        writeMessage("You hit a wall. Time to re-think your life choices.")
+        writeMessage("You hit a wall. Time to re-think your life choices. Your score = " + str(score))
     else:
-        writeMessage("Game Over")
+        writeMessage("Game Over. Your score = " + str(score))
 
 def writeMessage(message: str):
     global gameMessage
